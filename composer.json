@@ -1,0 +1,31 @@
+{
+    "name": "tots/cloud-task-laravel",
+    "description": "The library for Laravel PHP",
+    "version": "0.0.1",
+    "type": "library",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Tots\\CloudTask\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Matias Camiletti",
+            "email": "matias.camiletti@gmail.com"
+        }
+    ],
+    "minimum-stability": "stable",
+    "require": {
+        "php": "^8.0",
+        "tots/core-laravel": "dev-main",
+        "laravel/framework": "^10.10",
+        "google/cloud-tasks": "^1.14"
+    },
+    "repositories": [
+        {
+            "type": "git",
+            "url": "https://github.com/tots-agency/tots-core-laravel.git"
+        }
+    ]
+}
