@@ -37,6 +37,11 @@ class TaskService
      */
     protected $secretKey = '';
     /**
+     * 
+     * @var string
+     */
+    protected $appEngineService = null;
+    /**
      *
      * @var boolean
      */
@@ -69,9 +74,14 @@ class TaskService
             return;
         }
 
+        $service = null;
+        if($this->appEngineService !== null && $this->appEngineService != ''){
+            $service = $this->appEngineService;
+        }
+
         try {
             $params['tots_task_name'] = $taskClassName;
-            $this->addTask($queueId ?? $this->queueId, $path, $params);
+            $this->addTask($queueId ?? $this->queueId, $path, $params, $service);
         } catch (\Throwable $th) {
             $this->executeTaskInSameThread($taskClassName, $params);
         }
@@ -178,6 +188,9 @@ class TaskService
         }
         if(array_key_exists('secret_key', $this->config)){
             $this->secretKey = $this->config['secret_key'];
+        }
+        if(array_key_exists('app_engine_service', $this->config)){
+            $this->appEngineService = $this->config['app_engine_service'];
         }
         if(array_key_exists('is_active', $this->config) && $this->config['is_active'] == 1){
             $this->isActive = true;
