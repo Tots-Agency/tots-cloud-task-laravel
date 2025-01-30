@@ -1,14 +1,10 @@
 <div align="center">
-
+<img src="https://raw.githubusercontent.com/Tots-Agency/tots-template-api/main/public/tots-icon.png?token=GHSAT0AAAAAACZTFJVOGUNKPIHUYNA3GUYIZ43Y6BA" alt="TOTS Logo"/>
 <h3>
-  Cloud Task Utility library (Laravel) 👨🏼‍💻 TOTS
+  Cloud Task Utility library (Laravel)
 </h3>
 </div>
 <div align="center">
-   <a href="#-stack">
-        Stack
-    </a>
-    <span>&nbsp;✦&nbsp;</span>
     <a href="#-getting-started">
         Getting Started
     </a>
@@ -18,11 +14,7 @@
     </a>
 </div>
 
-## 🛠️ Stack
-
-To start work with Golazo API you will need to have some tools previously installed
-
-#### Prerequisites
+## 🛠️ Prerequisites
 
 - SO: OSX, Linux, Windows with WSL2
 - [**PHP 8.2**](https://php.net)
@@ -35,8 +27,8 @@ To start using this useful library and run Google cloud task, you need to follow
 
 1.  Open your `componser.json` and add the following repositories:
 
-```bash
-  repositories: [
+```json
+  "repositories": [
     // other repositories
     {
         "type": "git",
@@ -51,9 +43,9 @@ To start using this useful library and run Google cloud task, you need to follow
 
 2. Add packages `tots/cloud-task-laravel` and `tots/core-laravel` to require object in `composer.json` file
 
-```bash
+```json
 
-  require: {
+  "require": {
     // others packages
     "tots/core-laravel": "dev-main",
     "tots/cloud-task-laravel": "dev-main"
@@ -95,7 +87,7 @@ To start using this useful library and run Google cloud task, you need to follow
 
 5. Add the required envs for this library in your `env` file:
 
-```bash
+```js
   CLOUD_TASK_PROJECT_ID= // Id of the project where you create the task
   CLOUD_TASK_APP_ENGINE_SERVICE= // If you are using the default app engine remains empty
   CLOUD_TASK_LOCATION_ID= //YOUR Task region e.g us-central-1
@@ -105,18 +97,25 @@ To start using this useful library and run Google cloud task, you need to follow
 
 6. Add tots-cloud-task-laravel provider into `app.php` file:
 
-```bash
+```php
 
-  'providers' => ServiceProvider::defaultProviders()->merge([
+  <?php
+  use Illuminate\Support\ServiceProvider;
+
+  return [
+  //other configs
+
+  "providers" => ServiceProvider::defaultProviders()->merge([
       //other providers
       \Tots\CloudTask\Providers\TaskServiceProvider::class,
     ])->toArray(),
+  ]
 ```
 
 This will allow you to use it directly into your services or controllers directly from the construct.
 e.g
 
-```bash
+```php
 
   // other imports
   use Tots\CloudTask\Services\TaskService;
@@ -138,7 +137,7 @@ e.g
 
     public function exampleFunctionThatExecutionYourTask() {
       //execute task
-      $this->taskService->executeTask(YourTask::class, taskParams);
+      $this->taskService->executeTask(ExampleTask::class, taskParams);
     }
   }
 
@@ -146,7 +145,7 @@ e.g
 
 7. Create `task.php` into `config` folder
 
-```bash
+```php
   <?php
 
   return [
@@ -164,7 +163,7 @@ This file is used to config the library.
 
 8. Create your tasks into your `Task` folder inside `app` folder being sure you're implementing `BaseTask` type
 
-```bash
+```php
   <?php
 
     namespace App\Tasks;
