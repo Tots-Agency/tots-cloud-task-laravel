@@ -19,7 +19,7 @@
     "require": {
         "php": "^8.0",
         "tots/core-laravel": "dev-main",
-        "laravel/framework": "^10.10",
+        "laravel/framework": "^10.10|^11",
         "google/cloud-tasks": "^1.14"
     },
     "repositories": [
