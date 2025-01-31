@@ -93,6 +93,7 @@ To start using this useful library and run Google cloud task, you need to follow
   CLOUD_TASK_LOCATION_ID= //YOUR Task region e.g us-central-1
   CLOUD_TASK_QUEUE_ID= // Your task name or identificator
   CLOUD_TASK_SECRET_KEY= // Internal secret key, you can use the same you are using in "APP_KEY"
+  CLOUD_TASK_IS_ACTIVE= // If you don't want to run background tasks is not need it. Otherwise, you need to set this value to 1
 ```
 
 6. Add tots-cloud-task-laravel provider into `app.php` file:
@@ -181,8 +182,25 @@ This file is used to config the library.
 
         }
     }
-
 ```
+
+9. If you want to run a background task is important to create a handler route into the API and add a new environment value.
+
+   - In your api routes file add the following route:
+
+   ```php
+     Route::post('/task/handler', ['uses' => \Tots\CloudTask\Http\Controllers\TaskController::class . '@handle']);
+   ```
+
+   - In your env file add the following value:
+
+   ```js
+   // other cloud task values
+   CLOUD_TASK_IS_ACTIVE = 1
+   ```
+
+   > When run a background task? You will need to run a background task when you don't want to run the task in a normal workflow, blocking it until the task is finished
+   > e.g send emails, process huge amount of data, execute a task in a future date.
 
 ## 📞 Contact
 
