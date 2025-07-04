@@ -66,7 +66,17 @@ class TaskService
         $task = new $taskClassName();
         return $task->run($params);
     }
-
+    /**
+     * 
+     *
+     * @param object|string $taskClassName
+     * @param array $params
+     * @param string $path
+     * @param string $queueId
+     * @param \DateTime|null $scheduleTime
+     * 
+     * @return \Google\Cloud\Tasks\V2\Task|null
+     */
     public function executeTask($taskClassName, $params, $path = '/task/handler', $queueId = null, \DateTime $scheduleTime = null)
     {
         if(!$this->isActive){   
@@ -81,15 +91,22 @@ class TaskService
 
         try {
             $params['tots_task_name'] = $taskClassName;
-            $this->addTask($queueId ?? $this->queueId, $path, $params, $service, $scheduleTime);
+            return $this->addTask($queueId ?? $this->queueId, $path, $params, $service, $scheduleTime);
         } catch (\Throwable $th) {
             $this->executeTaskInSameThread($taskClassName, $params);
         }
     }
-
+    /**
+     *
+     * @param object|string $taskClassName
+     * @param array $params
+     * @param \DateTime $scheduleTime
+     * 
+     * @return \Google\Cloud\Tasks\V2\Task|null
+     */
     public function executeTaskWithSchedule($taskClassName, $params, \DateTime $scheduleTime)
     {
-        $this->executeTask($taskClassName, $params, '/task/handler', null, $scheduleTime);
+        return $this->executeTask($taskClassName, $params, '/task/handler', null, $scheduleTime);
     }
 
     public function addTaskHttp($queueId, $url, $params, \DateTime $scheduleTime = null)
