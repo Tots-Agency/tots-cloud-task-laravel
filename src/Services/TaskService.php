@@ -67,7 +67,7 @@ class TaskService
         return $task->run($params);
     }
 
-    public function executeTask($taskClassName, $params, $path = '/task/handler', $queueId = null)
+    public function executeTask($taskClassName, $params, $path = '/task/handler', $queueId = null, \DateTime $scheduleTime = null)
     {
         if(!$this->isActive){   
             $this->executeTaskInSameThread($taskClassName, $params);
@@ -81,10 +81,15 @@ class TaskService
 
         try {
             $params['tots_task_name'] = $taskClassName;
-            $this->addTask($queueId ?? $this->queueId, $path, $params, $service);
+            $this->addTask($queueId ?? $this->queueId, $path, $params, $service, $scheduleTime);
         } catch (\Throwable $th) {
             $this->executeTaskInSameThread($taskClassName, $params);
         }
+    }
+
+    public function executeTaskWithSchedule($taskClassName, $params, \DateTime $scheduleTime)
+    {
+        $this->executeTask($taskClassName, $params, '/task/handler', null, $scheduleTime);
     }
 
     public function addTaskHttp($queueId, $url, $params, \DateTime $scheduleTime = null)
@@ -114,7 +119,7 @@ class TaskService
         return $this->client->createTask($queueName, $task);
     }
 
-    public function addTask($queueId, $path, $params, $service = null, \DateTime $scheduleTime = null)
+    public function addTask($queueId, $path, $params, $service = null, \DateTime $scheduleTime)
     {
         // Create an App Engine Http Request Object.
         $httpRequest = new AppEngineHttpRequest();
