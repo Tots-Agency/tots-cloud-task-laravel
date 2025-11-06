@@ -77,7 +77,7 @@ class TaskService
      * 
      * @return \Google\Cloud\Tasks\V2\Task|null
      */
-    public function executeTask($taskClassName, $params, $path = '/task/handler', $queueId = null, \DateTime $scheduleTime = null)
+    public function executeTask($taskClassName, $params, $path = '/task/handler', $queueId = null, ?\DateTime $scheduleTime = null)
     {
         if(!$this->isActive){   
             $this->executeTaskInSameThread($taskClassName, $params);
@@ -104,12 +104,12 @@ class TaskService
      * 
      * @return \Google\Cloud\Tasks\V2\Task|null
      */
-    public function executeTaskWithSchedule($taskClassName, $params, \DateTime $scheduleTime)
+    public function executeTaskWithSchedule($taskClassName, $params, ?\DateTime $scheduleTime)
     {
         return $this->executeTask($taskClassName, $params, '/task/handler', null, $scheduleTime);
     }
 
-    public function addTaskHttp($queueId, $url, $params, \DateTime $scheduleTime = null)
+    public function addTaskHttp($queueId, $url, $params, ?\DateTime $scheduleTime = null)
     {
         // Create an App Engine Http Request Object.
         $httpRequest = new HttpRequest();
@@ -136,7 +136,7 @@ class TaskService
         return $this->client->createTask($queueName, $task);
     }
 
-    public function addTask($queueId, $path, $params, $service = null, \DateTime $scheduleTime)
+    public function addTask($queueId, $path, $params, $service = null, ?\DateTime $scheduleTime = null)
     {
         // Create an App Engine Http Request Object.
         $httpRequest = new AppEngineHttpRequest();
