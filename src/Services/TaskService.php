@@ -58,7 +58,8 @@ class TaskService
 
         try {
             $this->client = new CloudTasksClient();
-        } catch (\Throwable $th) { }
+        } catch (\Throwable $th) {
+        }
     }
 
     protected function executeTaskInSameThread($taskClassName, $params)
@@ -79,13 +80,13 @@ class TaskService
      */
     public function executeTask($taskClassName, $params, $path = '/task/handler', $queueId = null, ?\DateTime $scheduleTime = null)
     {
-        if(!$this->isActive){   
+        if (!$this->isActive) {
             $this->executeTaskInSameThread($taskClassName, $params);
             return;
         }
 
         $service = null;
-        if($this->appEngineService !== null && $this->appEngineService != ''){
+        if ($this->appEngineService !== null && $this->appEngineService != '') {
             $service = $this->appEngineService;
         }
 
@@ -123,9 +124,10 @@ class TaskService
         $task = new Task();
         $task->setHttpRequest($httpRequest);
 
-        if($scheduleTime != null){
+        if ($scheduleTime != null) {
             $timestamp = new Timestamp();
-            $timestamp->fromDateTime($scheduleTime);
+            $timestamp->setSeconds($scheduleTime->getTimestamp());
+            $timestamp->setNanos(0);
             $task->setScheduleTime($timestamp);
         }
 
@@ -143,7 +145,7 @@ class TaskService
         // The path of the HTTP request to the App Engine service.
         $httpRequest->setRelativeUri($path);
 
-        if($service !== null){
+        if ($service !== null) {
             $routing = new \Google\Cloud\Tasks\V2\AppEngineRouting();
             $routing->setService($service);
 
@@ -162,9 +164,10 @@ class TaskService
         $task = new Task();
         $task->setAppEngineHttpRequest($httpRequest);
 
-        if($scheduleTime != null){
+        if ($scheduleTime != null) {
             $timestamp = new Timestamp();
-            $timestamp->fromDateTime($scheduleTime);
+            $timestamp->setSeconds($scheduleTime->getTimestamp());
+            $timestamp->setNanos(0);
             $task->setScheduleTime($timestamp);
         }
 
@@ -178,9 +181,9 @@ class TaskService
     /**
      * Verify if secret key is valid
      */
-    public function isValidSecretKey($key) : bool
+    public function isValidSecretKey($key): bool
     {
-        if($this->secretKey == $key){
+        if ($this->secretKey == $key) {
             return true;
         }
 
@@ -199,22 +202,22 @@ class TaskService
 
     protected function processConfig()
     {
-        if(array_key_exists('project_id', $this->config)){
+        if (array_key_exists('project_id', $this->config)) {
             $this->projectId = $this->config['project_id'];
         }
-        if(array_key_exists('location_id', $this->config)){
+        if (array_key_exists('location_id', $this->config)) {
             $this->locationId = $this->config['location_id'];
         }
-        if(array_key_exists('queue_id', $this->config)){
+        if (array_key_exists('queue_id', $this->config)) {
             $this->queueId = $this->config['queue_id'];
         }
-        if(array_key_exists('secret_key', $this->config)){
+        if (array_key_exists('secret_key', $this->config)) {
             $this->secretKey = $this->config['secret_key'];
         }
-        if(array_key_exists('app_engine_service', $this->config)){
+        if (array_key_exists('app_engine_service', $this->config)) {
             $this->appEngineService = $this->config['app_engine_service'];
         }
-        if(array_key_exists('is_active', $this->config) && $this->config['is_active'] == 1){
+        if (array_key_exists('is_active', $this->config) && $this->config['is_active'] == 1) {
             $this->isActive = true;
         }
     }
