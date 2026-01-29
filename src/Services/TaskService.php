@@ -90,12 +90,8 @@ class TaskService
             $service = $this->appEngineService;
         }
 
-        try {
-            $params['tots_task_name'] = $taskClassName;
-            return $this->addTask($queueId ?? $this->queueId, $path, $params, $service, $scheduleTime);
-        } catch (\Throwable $th) {
-            $this->executeTaskInSameThread($taskClassName, $params);
-        }
+        $params['tots_task_name'] = $taskClassName;
+        return $this->addTask($queueId ?? $this->queueId, $path, $params, $service, $scheduleTime);
     }
     /**
      *
