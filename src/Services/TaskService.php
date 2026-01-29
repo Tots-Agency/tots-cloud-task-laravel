@@ -90,8 +90,12 @@ class TaskService
             $service = $this->appEngineService;
         }
 
-        $params['tots_task_name'] = $taskClassName;
-        return $this->addTask($queueId ?? $this->queueId, $path, $params, $service, $scheduleTime);
+        try {
+            $params['tots_task_name'] = $taskClassName;
+            return $this->addTask($queueId ?? $this->queueId, $path, $params, $service, $scheduleTime);
+        } catch (\Throwable $th) {
+            $this->executeTaskInSameThread($taskClassName, $params);
+        }
     }
     /**
      *
@@ -123,7 +127,6 @@ class TaskService
         if ($scheduleTime != null) {
             $timestamp = new Timestamp();
             $timestamp->setSeconds($scheduleTime->getTimestamp());
-            $timestamp->setNanos(0);
             $task->setScheduleTime($timestamp);
         }
 
@@ -163,7 +166,6 @@ class TaskService
         if ($scheduleTime != null) {
             $timestamp = new Timestamp();
             $timestamp->setSeconds($scheduleTime->getTimestamp());
-            $timestamp->setNanos(0);
             $task->setScheduleTime($timestamp);
         }
 
