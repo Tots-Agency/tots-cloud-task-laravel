@@ -3,10 +3,12 @@
 namespace Tots\CloudTask\Services;
 
 use Google\Cloud\Tasks\V2\AppEngineHttpRequest;
-use Google\Cloud\Tasks\V2\CloudTasksClient;
+use Google\Cloud\Tasks\V2\Client\CloudTasksClient;
 use Google\Cloud\Tasks\V2\HttpMethod;
 use Google\Cloud\Tasks\V2\Task;
 use Google\Cloud\Tasks\V2\HttpRequest;
+use Google\Cloud\Tasks\V2\CreateTaskRequest;
+use Google\Cloud\Tasks\V2\DeleteTaskRequest;
 use Google\Protobuf\Timestamp;
 
 class TaskService
@@ -131,10 +133,14 @@ class TaskService
         }
 
         // Create Queue
-        $queueName = $this->client->queueName($this->projectId, $this->locationId, $queueId);
+        $queueName = CloudTasksClient::queueName($this->projectId, $this->locationId, $queueId);
+
+        $request = (new CreateTaskRequest())
+            ->setParent($queueName)
+            ->setTask($task);
 
         // Send request and print the task name.
-        return $this->client->createTask($queueName, $task);
+        return $this->client->createTask($request);
     }
 
     public function addTask($queueId, $path, $params, $service = null, ?\DateTime $scheduleTime = null)
@@ -170,10 +176,14 @@ class TaskService
         }
 
         // Create Queue
-        $queueName = $this->client->queueName($this->projectId, $this->locationId, $queueId);
+        $queueName = CloudTasksClient::queueName($this->projectId, $this->locationId, $queueId);
+
+        $request = (new CreateTaskRequest())
+            ->setParent($queueName)
+            ->setTask($task);
 
         // Send request and print the task name.
-        return $this->client->createTask($queueName, $task);
+        return $this->client->createTask($request);
     }
 
     /**
@@ -195,7 +205,10 @@ class TaskService
      */
     public function removeTask($taskId)
     {
-        return $this->client->deleteTask($taskId);
+        $request = (new DeleteTaskRequest())
+            ->setName($taskId);
+
+        return $this->client->deleteTask($request);
     }
 
     protected function processConfig()

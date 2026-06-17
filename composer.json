@@ -1,7 +1,7 @@
 {
     "name": "tots/cloud-task-laravel",
     "description": "The library for Laravel PHP",
-    "version": "11.0.2",
+    "version": "12.0.0",
     "type": "library",
     "license": "MIT",
     "autoload": {
@@ -18,9 +18,9 @@
     "minimum-stability": "stable",
     "require": {
         "php": "^8.0",
-        "tots/core-laravel": "^11.0.2",
-        "laravel/framework": "^10.10|^11",
-        "google/cloud-tasks": "^1.14"
+        "tots/core-laravel": "^11|^12",
+        "laravel/framework": "^11|^12",
+        "google/cloud-tasks": "^2.2.0"
     },
     "repositories": [
         {
